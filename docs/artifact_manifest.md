@@ -48,13 +48,13 @@ and should remain outside git history.
 
 Notebooks that define the current experiment state:
 
-- `creating_dataset_from_filterbank_by_indexes.ipynb`
-- `subdataset_creation.ipynb`
-- `stat_analysis.ipynb`
-- `1_cnn_model.ipynb`
-- `classical_learning_stat.ipynb`
-- `1d_cnn_global_test_rfi_cleaning_real_test.ipynb`
-- `mlp_global_test_rfi_cleaning_real_test.ipynb`
+- `notebooks/01_dataset_creation/creating_dataset_from_filterbank_by_indexes.ipynb`
+- `notebooks/01_dataset_creation/subdataset_creation.ipynb`
+- `notebooks/02_feature_exploration/stat_analysis.ipynb`
+- `notebooks/03_model_training/1_cnn_model.ipynb`
+- `notebooks/03_model_training/classical_learning_stat.ipynb`
+- `notebooks/04_full_file_tests/1d_cnn_global_test_rfi_cleaning_real_test.ipynb`
+- `notebooks/04_full_file_tests/mlp_global_test_rfi_cleaning_real_test.ipynb`
 
 The `.py` files currently mirror some notebooks and should be treated as
-exports until a clean reusable source package is created.
+exports in `legacy_exports/` until a clean reusable source package is created.

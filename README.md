@@ -45,8 +45,8 @@ reproducible pipeline.
 
 One important issue to fix before drawing final quantitative conclusions:
 
-- `subdataset_creation.ipynb` currently creates `split_indices.npz` with a
-  stratified row-level split.
+- `notebooks/01_dataset_creation/subdataset_creation.ipynb` currently creates
+  `split_indices.npz` with a stratified row-level split.
 - For channel-level data, channels from the same segment are correlated.
 - The next cleaned version should use a group split by `segment_index`, so that
   all channels from one segment belong to only one of `train`, `validation`, or
@@ -55,18 +55,45 @@ One important issue to fix before drawing final quantitative conclusions:
 This is especially important for statistical features that use ratios between
 per-channel quantities and whole-segment quantities.
 
+## Repository Layout
+
+```text
+.
+|-- README.md
+|-- configs/
+|   `-- README.md
+|-- docs/
+|   |-- artifact_manifest.md
+|   |-- data_contract.md
+|   |-- notebook_workflow.md
+|   `-- roadmap.md
+|-- legacy_exports/
+|   `-- old notebook-to-Python exports
+|-- notebooks/
+|   |-- 01_dataset_creation/
+|   |-- 02_feature_exploration/
+|   |-- 03_model_training/
+|   `-- 04_full_file_tests/
+`-- src/
+    `-- rfimt/
+```
+
+The repository is organized around notebooks because the project is still in a
+research-analysis stage. The future `src/rfimt/` package is reserved for stable
+helpers that are useful across notebooks.
+
 ## Notebook Map
 
 ### Dataset Creation
 
-- `creating_dataset_from_filterbank_by_indexes.ipynb`
+- `notebooks/01_dataset_creation/creating_dataset_from_filterbank_by_indexes.ipynb`
   - Reads selected segments from `B0531+21_59000_48386.fil`.
   - Uses manually defined RFI segment ranges and frequency-channel ranges.
   - Creates channel-level examples.
   - Computes raw and normalized per-channel statistics.
   - Writes the large channel dataset and metadata.
 
-- `subdataset_creation.ipynb`
+- `notebooks/01_dataset_creation/subdataset_creation.ipynb`
   - Creates a smaller balanced subset for faster experiments.
   - Current baseline subset: `10000` `NBRFI` examples and `10000` `None`
     examples.
@@ -74,20 +101,20 @@ per-channel quantities and whole-segment quantities.
 
 ### Exploratory Statistics
 
-- `stat_analysis.ipynb`
+- `notebooks/02_feature_exploration/stat_analysis.ipynb`
   - Visual inspection of statistical features.
   - Useful for understanding whether simple feature projections separate
     classes.
 
 ### Model Training
 
-- `1_cnn_model.ipynb`
+- `notebooks/03_model_training/1_cnn_model.ipynb`
   - PyTorch 1D-CNN baseline on raw 256-sample channel time series.
   - Tests the Rishi Kumar-inspired channel-profile approach with input length
     adapted from `512` to `256`.
   - Includes segment-level visual checks and timing measurements.
 
-- `classical_learning_stat.ipynb`
+- `notebooks/03_model_training/classical_learning_stat.ipynb`
   - Scikit-learn models trained on engineered statistical features.
   - Compares linear and nonlinear baselines:
     - SGD logistic regression;
@@ -101,11 +128,11 @@ per-channel quantities and whole-segment quantities.
 
 ### Full-File / Real-Data Tests
 
-- `1d_cnn_global_test_rfi_cleaning_real_test.ipynb`
+- `notebooks/04_full_file_tests/1d_cnn_global_test_rfi_cleaning_real_test.ipynb`
   - Applies a trained 1D-CNN model to larger data products.
   - Contains FITS/PSRFITS-oriented masking helpers.
 
-- `mlp_global_test_rfi_cleaning_real_test.ipynb`
+- `notebooks/04_full_file_tests/mlp_global_test_rfi_cleaning_real_test.ipynb`
   - Applies selected scikit-learn/statistical models to larger data products.
   - Contains masking, segment writing, and diagnostic plotting helpers.
 
@@ -157,18 +184,18 @@ Known large local artifacts include:
 The next cleanup should preserve the notebook-first workflow while making the
 analysis easier to restart:
 
-1. Add a small `docs/data_contract.md` describing input arrays, metadata
-   columns, labels, and split rules.
-2. Add a small `docs/artifact_manifest.md` describing which local heavy files
-   exist and how they were produced.
-3. Add a `notebooks/` directory and move notebooks there only after a safe
-   rename plan is prepared.
+1. Replace the current row-level split with a segment-level group split.
+2. Re-run the baseline 1D-CNN and statistical models after the split fix.
+3. Add config files for dataset creation, baseline training, z-score tests, and
+   full-file inference.
 4. Extract stable helper functions into `src/rfimt/`, while keeping notebooks
    as the main research interface.
-5. Replace the current row-level split with a segment-level group split.
-6. Re-run the baseline 1D-CNN and statistical models after the split fix.
-7. Only after the baseline is reproducible, revisit z-score normalization and
+5. Only after the baseline is reproducible, revisit z-score normalization and
    FITS offset handling.
+6. Prepare a separate student-facing task and dataset only after the research
+   data contract is stable.
+
+The current working plan is tracked in `docs/roadmap.md`.
 
 ## Relation To PhD Planning
 

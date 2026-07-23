@@ -128,7 +128,7 @@ whole-segment statistics.
 ## Current Known Issue
 
 The current `split_indices.npz` was produced from a stratified row-level split
-inside `subdataset_creation.ipynb`.
+inside `notebooks/01_dataset_creation/subdataset_creation.ipynb`.
 
 This is acceptable as an exploratory first pass, but final baseline metrics
 should be recomputed after a group-split correction.

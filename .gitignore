@@ -1,0 +1,54 @@
+# Jupyter
+.ipynb_checkpoints/
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local environments
+.venv/
+venv/
+env/
+
+# Large radio astronomy data
+*.fil
+*.fits
+*.fit
+*.ar
+*.sf
+
+# Large arrays and split artifacts
+*.npy
+*.npz
+
+# Large metadata tables generated from data
+*_channels_meta.csv
+*_subset_channels_meta.csv
+segments_index_*.csv
+mask_stats_*.csv
+
+# Generated diagnostic figures
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*_individual_key_metrics_*/
+1_cnn_individual_key_metrics_*/
+stat_individual_key_metrics_*/
+
+# Model artifacts; keep release models through an explicit manifest if needed.
+*.pt
+*.pth
+*.joblib
+*.pkl
+saved_models*/
+
+# Logs and scratch
+*.log
+tmp/
+scratch/
+outputs/
+runs/

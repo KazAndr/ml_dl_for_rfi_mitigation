@@ -76,11 +76,25 @@ per-channel quantities and whole-segment quantities.
 |   `-- 04_full_file_tests/
 `-- src/
     `-- rfimt/
+        |-- constants.py
+        |-- features.py
+        |-- io.py
+        |-- labels.py
+        |-- metrics.py
+        |-- models.py
+        `-- splits.py
 ```
 
 The repository is organized around notebooks because the project is still in a
-research-analysis stage. The future `src/rfimt/` package is reserved for stable
-helpers that are useful across notebooks.
+research-analysis stage. `src/rfimt/` contains stable helpers that are useful
+across notebooks, but notebooks remain the primary analysis interface.
+
+Install the local helper package in editable mode when you want notebooks to
+import `rfimt` without setting `PYTHONPATH` manually:
+
+```bash
+pip install -e .
+```
 
 ## Notebook Map
 

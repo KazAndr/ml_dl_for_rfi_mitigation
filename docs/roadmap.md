@@ -11,7 +11,8 @@ that its metrics can be trusted and compared.
 Steps:
 
 1. Preserve the current exploratory notebooks as historical working notebooks.
-2. Fix the data contract:
+2. Fix the data contract using `src/rfimt/features.py`, `src/rfimt/labels.py`,
+   and `src/rfimt/splits.py`:
    - preserve `sample_index`, `segment_index`, `channel_index`, `frequency`,
      `label`, and `original_segment_label` in subset metadata;
    - define one canonical metadata schema;

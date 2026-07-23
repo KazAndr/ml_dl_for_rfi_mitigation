@@ -48,3 +48,16 @@ The intended workflow is:
 The first helper worth extracting is the group-split and subset-generation
 logic. It controls the validity of all later metrics and should become stable
 before new models are trained.
+
+## Dependencies
+
+The lightweight feature and labeling helpers require only `numpy` and `pandas`.
+
+The model, split, and metric helpers require additional scientific packages:
+
+- `scikit-learn` for group splits, statistical models, thresholds, and metrics;
+- `torch` for the 1D-CNN class;
+- `scipy` for converting sklearn decision scores with `expit`.
+
+These imports are intentionally lazy where possible so notebooks can use data
+inspection helpers even in a minimal environment.

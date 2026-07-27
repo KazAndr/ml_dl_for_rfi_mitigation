@@ -3,28 +3,59 @@
 This roadmap separates the old exploratory baseline, the PhD continuation, and
 the future student-facing work.
 
-## Track A: Reproducible Baseline
+## Track A: Legacy Baseline Reproduction
 
-Goal: make the current `B0531+21_59000_48386` experiment reproducible enough
-that its metrics can be trusted and compared.
+Goal: reproduce the current `B0531+21_59000_48386` row-split experiment before
+changing methodology. This creates a historical control point for later
+group-split, z-score, and student-facing work.
 
 Steps:
 
 1. Preserve the current exploratory notebooks as historical working notebooks.
-2. Fix the data contract using `src/rfimt/features.py`, `src/rfimt/labels.py`,
+2. Check that the required local artifacts for the old run are present.
+3. Re-run the legacy notebooks without changing the row-level split, labels,
+   normalization, or model definitions.
+4. Record:
+   - subset shape and label counts;
+   - train, validation, and test sizes;
+   - 1D-CNN metrics;
+   - statistical-model comparison;
+   - selected top-k feature models;
+   - segment-level checks and qualitative diagnostics.
+5. Document any failure with the failing notebook, cell purpose, and required
+   next action.
+
+Done criteria:
+
+- the old baseline either runs again or has a precise failure report;
+- row-split results are clearly labeled as legacy exploratory results;
+- required heavy artifacts are listed without being committed;
+- the next corrected-baseline step has a stable starting point.
+
+See `docs/legacy_baseline_reproduction_plan.md`.
+
+## Track A2: Corrected Reproducible Baseline
+
+Goal: make the baseline methodologically cleaner after the legacy run is
+recoverable or its failures are understood.
+
+Steps:
+
+1. Fix the data contract using `src/rfimt/features.py`, `src/rfimt/labels.py`,
    and `src/rfimt/splits.py`:
    - preserve `sample_index`, `segment_index`, `channel_index`, `frequency`,
      `label`, and `original_segment_label` in subset metadata;
    - define one canonical metadata schema;
    - define one canonical label map.
-3. Replace the current row-level split with a group split by `segment_index`.
-4. Regenerate the balanced subset using the corrected metadata contract.
-5. Re-run:
+2. Replace the legacy row-level split with a group split by `segment_index`.
+3. Regenerate the balanced subset using the corrected metadata contract.
+4. Re-run:
    - 1D-CNN baseline;
    - statistical-feature baselines;
    - selected top-k feature models.
-6. Recompute segment-level metrics under the corrected split.
-7. Mark the old row-split results as exploratory only.
+5. Recompute segment-level metrics under the corrected split.
+6. Compare corrected group-split results with the legacy row-split control
+   point.
 
 Done criteria:
 
@@ -90,7 +121,8 @@ Done criteria:
 Goal: later create a clean, bounded student task around RFI-channel anomaly
 detection.
 
-This should not start until Track A has a stable data contract.
+This should not start until Track A has a reproduced legacy control point and
+Track A2 has a stable data contract.
 
 Likely student framing:
 

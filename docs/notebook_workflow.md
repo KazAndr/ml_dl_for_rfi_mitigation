@@ -45,9 +45,13 @@ The intended workflow is:
 
 ## First Refactoring Target
 
-The first helper worth extracting is the group-split and subset-generation
-logic. It controls the validity of all later metrics and should become stable
-before new models are trained.
+The first immediate notebook task is to reproduce the legacy baseline without
+changing its row-level split. This gives the project a control point before
+methodological fixes.
+
+After that, the first helper worth extracting into the active workflow is the
+group-split and subset-generation logic. It controls the validity of all later
+metrics and should become stable before new corrected models are trained.
 
 ## Dependencies
 

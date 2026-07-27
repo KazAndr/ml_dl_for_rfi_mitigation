@@ -25,10 +25,17 @@ with an explicit project-root helper.
 
 ## Stages
 
+0. `00_reproducibility/`
+   - Audit whether old experiments still run after repository cleanup.
+   - Keep legacy choices unchanged during reproduction: row-level split,
+     labels, normalization, and model definitions.
+   - Use this stage before correcting the split or regenerating datasets.
+
 1. `01_dataset_creation/`
    - Build the channel-level dataset.
    - Build a smaller subset for fast experiments.
-   - Next required fix: group split by `segment_index`.
+   - Keep the old row-level split for legacy reproduction.
+   - Next corrected-baseline fix: group split by `segment_index`.
 
 2. `02_feature_exploration/`
    - Inspect engineered statistics.
@@ -38,7 +45,8 @@ with an explicit project-root helper.
 3. `03_model_training/`
    - Train the 1D-CNN baseline on channel time series.
    - Train statistical and tabular baselines on engineered features.
-   - Re-run only after the group-split correction.
+   - First reproduce the legacy row-split baseline.
+   - Re-run again after the group-split correction.
 
 4. `04_full_file_tests/`
    - Apply trained models to larger files.

@@ -65,11 +65,13 @@ per-channel quantities and whole-segment quantities.
 |-- docs/
 |   |-- artifact_manifest.md
 |   |-- data_contract.md
+|   |-- legacy_baseline_reproduction_plan.md
 |   |-- notebook_workflow.md
 |   `-- roadmap.md
 |-- legacy_exports/
 |   `-- old notebook-to-Python exports
 |-- notebooks/
+|   |-- 00_reproducibility/
 |   |-- 01_dataset_creation/
 |   |-- 02_feature_exploration/
 |   |-- 03_model_training/
@@ -198,15 +200,19 @@ Known large local artifacts include:
 The next cleanup should preserve the notebook-first workflow while making the
 analysis easier to restart:
 
-1. Replace the current row-level split with a segment-level group split.
-2. Re-run the baseline 1D-CNN and statistical models after the split fix.
-3. Add config files for dataset creation, baseline training, z-score tests, and
+1. Reproduce the legacy row-level baseline without changing the old split,
+   labels, normalization, or model definitions.
+2. Record the recovered 1D-CNN, statistical-model, and segment-level results as
+   legacy exploratory metrics.
+3. Replace the current row-level split with a segment-level group split.
+4. Re-run the baseline 1D-CNN and statistical models after the split fix.
+5. Add config files for dataset creation, baseline training, z-score tests, and
    full-file inference.
-4. Extract stable helper functions into `src/rfimt/`, while keeping notebooks
+6. Extract stable helper functions into `src/rfimt/`, while keeping notebooks
    as the main research interface.
-5. Only after the baseline is reproducible, revisit z-score normalization and
+7. Only after the corrected baseline is reproducible, revisit z-score normalization and
    FITS offset handling.
-6. Prepare a separate student-facing task and dataset only after the research
+8. Prepare a separate student-facing task and dataset only after the research
    data contract is stable.
 
 The current working plan is tracked in `docs/roadmap.md`.

@@ -1,0 +1,59 @@
+{
+  "experiment_id": "replace_with_unique_id",
+  "purpose": "Short scientific question answered by this run.",
+  "status": "template",
+  "code_revision": "git commit or working-tree identifier",
+  "dataset": {
+    "dataset_id": "B0531+21_59000_48386_subset",
+    "source_observation": "B0531+21_59000_48386.fil",
+    "array_path": "local-only path",
+    "metadata_path": "local-only path",
+    "segment_length": 256,
+    "metadata_schema_version": "pending"
+  },
+  "labels": {
+    "positive": "NBRFI",
+    "ordinary_negative": "None",
+    "hard_negative": "NoneWNBRFI",
+    "hard_negative_role": "evaluate_only"
+  },
+  "split": {
+    "mode": "group_segment",
+    "group_column": "segment_index",
+    "random_state": 42,
+    "train_fraction": 0.8,
+    "validation_fraction": 0.1,
+    "test_fraction": 0.1
+  },
+  "preprocessing": {
+    "cleaning_variant": "none",
+    "cleaning_parameters": {},
+    "normalization_variant": "zscore_per_channel",
+    "normalization_parameters": {}
+  },
+  "representation": {
+    "kind": "raw_channel_series",
+    "feature_set": null
+  },
+  "model": {
+    "family": "cnn_1d",
+    "factory_name": "CNN1DRFI256Logits",
+    "parameters": {},
+    "random_state": 42
+  },
+  "selection": {
+    "threshold_source": "validation",
+    "threshold_rule": "best_f1",
+    "threshold_grid": "0.01_to_0.99_step_0.01"
+  },
+  "evaluation": {
+    "universes": ["row_test", "segment_test", "hard_negative"],
+    "primary_metric": "f1"
+  },
+  "outputs": {
+    "run_directory": "local-only path",
+    "write_result_manifest": true,
+    "write_model_artifact": false,
+    "write_diagnostics": true
+  }
+}

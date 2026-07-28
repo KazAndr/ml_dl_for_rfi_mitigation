@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "rfimt"
 version = "0.1.0"
 description = "Notebook-first ML/DL experiments for channel-level RFI mitigation."
-requires-python = ">=3.10"
+requires-python = ">=3.8"
 dependencies = [
   "numpy",
   "pandas",

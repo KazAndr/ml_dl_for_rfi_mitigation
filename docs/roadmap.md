@@ -64,6 +64,10 @@ Done criteria:
 - baseline metrics are recomputed and clearly labeled as group-split metrics;
 - `NoneWNBRFI` is evaluated as hard-negative material.
 
+Before implementation, use [the experiment-pipeline design](experiment_pipeline_design.md)
+as the design contract. The corrected baseline is a named experiment, not an
+edited legacy notebook run.
+
 ## Track B: Z-Score And Transfer Tests
 
 Goal: test whether normalization explains poor transfer to other observations
@@ -71,18 +75,20 @@ or file formats.
 
 Normalization variants to compare:
 
-- current per-channel min-max style normalization;
 - per-channel z-score;
-- per-segment z-score;
+- per-segment z-score, if the per-channel result motivates it;
 - robust median/MAD variant, if ordinary z-score is unstable;
-- no normalization for statistical models where raw scale may be meaningful.
+
+The existing per-channel min-max and no-normalization cases are historical
+controls. Do not spend the next experiment budget reproducing them unless a
+specific implementation check requires it.
 
 Evaluation targets:
 
 - original `B0531+21_59000_48386` split after group-split correction;
 - unseen `B0531+21_60482_57794` or related filterbank data;
-- B0355+54 / FRB20240114A-like FITS data only after FITS offset handling is
-  checked.
+- newly formed filterbank data from the additional observations, after their
+  provenance and preprocessing are recorded.
 
 Done criteria:
 
@@ -93,28 +99,31 @@ Done criteria:
 - transfer failures are separated into normalization problems, file-format
   problems, and model/domain-shift problems.
 
-## Track C: FITS Offset Recheck
+## Track C: Full-File Transfer On Newly Formed Filterbanks
 
-Goal: decide whether FITS subintegration offsets caused models to mark all
-channels as contaminated for B0355+54 and FRB20240114A-like data.
+Goal: evaluate accepted RFI experiments on filterbanks formed from additional
+data, with a documented input-production chain and a small visual audit.
+
+The older FITS-offset question is not discarded; it is deferred. Reopen it
+only when a later FITS transfer result provides evidence that offset/scaling
+handling, rather than ordinary domain shift, is the likely cause of failure.
 
 Steps:
 
-1. Isolate the FITS reading and writing logic from the current full-file
-   notebooks.
-2. Inspect raw array values before and after offset/scaling application.
-3. Compare one small set of segments:
-   - raw loaded data;
-   - offset-corrected data;
-   - normalized data;
-   - model mask.
-4. Re-run one small inference sample after correction.
+1. Record the source observation, filterbank-forming command/software and
+   relevant parameters.
+2. Inspect a small representative set of raw segments and their normalized
+   forms before inference.
+3. Run a selected accepted model with progress reporting and save masks plus
+   compact visual diagnostics.
+4. Classify failures as data-production, normalization or model/domain-shift
+   issues before changing a model.
 
 Done criteria:
 
-- the FITS loading convention is documented;
-- the failure mode is classified as offset-related, normalization-related, or
-  model/domain-shift-related.
+- the filterbank production convention is documented;
+- each transfer result names its source data, preprocessing and selected model;
+- any failure is classified without silently changing several axes at once.
 
 ## Track D: Future Student Task
 

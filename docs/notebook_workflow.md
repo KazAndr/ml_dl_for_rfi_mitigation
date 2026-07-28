@@ -24,6 +24,20 @@ The intended workflow is:
 - debugging of new normalization ideas;
 - side-by-side checks of real data and model masks.
 
+## Progress Reporting
+
+Every long-running notebook procedure must visibly report progress with the
+standard server-compatible import:
+
+```python
+from tqdm import tqdm
+```
+
+Wrap loops over segments, files, parameter combinations, repeated evaluations
+and training epochs where the framework does not already provide equivalent
+progress. Do not import `tqdm.notebook`; widget rendering is not assumed on
+the server.
+
 ## What Belongs In `src/rfimt/`
 
 - stable data loading helpers;
@@ -54,6 +68,21 @@ group-split and subset-generation logic. It controls the validity of all later
 metrics and should become stable before new corrected models are trained.
 
 ## Dependencies
+
+The repository package and new reusable notebooks support Python `3.8+`. The
+current server standard is the `pytorch4punch.sif` container, built on Python
+`3.8`; use that same container for corrected runs until the research
+environment is deliberately migrated. Install the project in editable mode
+before importing `rfimt` from a notebook:
+
+```bash
+python -m pip install -e .
+```
+
+Python `3.8` is end-of-life, so a future container upgrade is sensible, but it
+is not a prerequisite for the current refactor. Corrected runs must record the
+container/kernel and package revision in their run manifest; do not mix an
+untracked local kernel with container-derived results.
 
 The lightweight feature and labeling helpers require only `numpy` and `pandas`.
 

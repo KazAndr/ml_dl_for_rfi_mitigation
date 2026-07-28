@@ -61,10 +61,13 @@ per-channel quantities and whole-segment quantities.
 .
 |-- README.md
 |-- configs/
+|   |-- experiments/
+|   |   `-- experiment_spec_template.json
 |   `-- README.md
 |-- docs/
 |   |-- artifact_manifest.md
 |   |-- data_contract.md
+|   |-- experiment_pipeline_design.md
 |   |-- legacy_baseline_reproduction_plan.md
 |   |-- notebook_workflow.md
 |   `-- roadmap.md
@@ -91,8 +94,9 @@ The repository is organized around notebooks because the project is still in a
 research-analysis stage. `src/rfimt/` contains stable helpers that are useful
 across notebooks, but notebooks remain the primary analysis interface.
 
-Install the local helper package in editable mode when you want notebooks to
-import `rfimt` without setting `PYTHONPATH` manually:
+The helper package supports Python `3.8+`. For reproducible RFI runs, install
+it inside the `pytorch4punch.sif` research environment when you want notebooks
+to import `rfimt` without setting `PYTHONPATH` manually:
 
 ```bash
 pip install -e .
@@ -114,6 +118,13 @@ pip install -e .
   - Current baseline subset: `10000` `NBRFI` examples and `10000` `None`
     examples.
   - Needs a group-split update before final metrics are trusted.
+
+- `notebooks/01_dataset_creation/group_split_subset.ipynb`
+  - New corrected path; leaves the historical subset untouched.
+  - Preserves canonical metadata and builds the balanced subset only after
+    `segment_index` groups have been assigned to train, validation or test.
+  - Writes a local provenance record, split summary and hard-negative index
+    file beside the new artifacts.
 
 ### Exploratory Statistics
 

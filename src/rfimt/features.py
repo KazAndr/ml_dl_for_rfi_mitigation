@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Callable
+
 import numpy as np
 import pandas as pd
 
@@ -59,6 +61,29 @@ def normalize_robust_mad_per_channel(seg: np.ndarray, scale: float = 1.4826) -> 
     median = np.median(seg, axis=1, keepdims=True)
     mad = np.median(np.abs(seg - median), axis=1, keepdims=True)
     return (seg - median) / np.where(mad == 0, 1.0, mad * scale)
+
+
+def normalize_none(seg: np.ndarray) -> np.ndarray:
+    """Return a float copy when an experiment declares no normalization."""
+    return np.asarray(seg, dtype=float).copy()
+
+
+NORMALIZATION_FUNCTIONS: dict[str, Callable[[np.ndarray], np.ndarray]] = {
+    "none": normalize_none,
+    "minmax_per_channel": normalize_minmax_per_channel,
+    "zscore_per_channel": normalize_zscore_per_channel,
+    "zscore_per_segment": normalize_zscore_per_segment,
+    "robust_mad_per_channel": normalize_robust_mad_per_channel,
+}
+
+
+def get_normalizer(name: str) -> Callable[[np.ndarray], np.ndarray]:
+    """Return a named normalization function used in an experiment spec."""
+    try:
+        return NORMALIZATION_FUNCTIONS[name]
+    except KeyError as exc:
+        available = ", ".join(sorted(NORMALIZATION_FUNCTIONS))
+        raise ValueError(f"Unknown normalization {name!r}; available: {available}") from exc
 
 
 def compute_ratio(per_channel_vals: np.ndarray, seg_val: float) -> np.ndarray:

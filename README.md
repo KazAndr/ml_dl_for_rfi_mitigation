@@ -104,16 +104,16 @@ pip install -e .
 
 ## Testing
 
-`pytest` is the canonical test runner for this repository. Install development
-dependencies with `pip install -e '.[dev]'`, then run:
+Until the shared `pytorch4punch.sif` image is updated, use the compatible
+`unittest` runner:
 
 ```bash
-PYTHONPATH=src pytest
+PYTHONPATH=src python -B -m unittest discover -s tests -v
 ```
 
-Existing `unittest` test classes remain supported and are discovered by pytest.
-New tests should use pytest style where it improves clarity; do not rewrite
-working tests merely for stylistic consistency.
+Migrate the test interface to `pytest` when the shared image supplies it. The
+existing `unittest` tests should then remain runnable through pytest; do not
+rewrite working assertions merely for framework style.
 
 ## Notebook Map
 

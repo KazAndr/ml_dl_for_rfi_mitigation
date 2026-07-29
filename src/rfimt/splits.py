@@ -69,10 +69,13 @@ def make_group_split_indices(
 
     row_groups = meta[group_col].to_numpy()
 
+    # These names are the canonical in-memory and on-disk split contract.
+    # Values are always row-index arrays, so an ``_idx`` suffix adds ambiguity
+    # without conveying extra information.
     return {
-        "train_idx": np.flatnonzero(np.isin(row_groups, train_groups)),
-        "val_idx": np.flatnonzero(np.isin(row_groups, val_groups)),
-        "test_idx": np.flatnonzero(np.isin(row_groups, test_groups)),
+        "train": np.flatnonzero(np.isin(row_groups, train_groups)),
+        "val": np.flatnonzero(np.isin(row_groups, val_groups)),
+        "test": np.flatnonzero(np.isin(row_groups, test_groups)),
     }
 
 

@@ -12,6 +12,9 @@ import pandas as pd
 
 STUDENT_CORE_LABELS = ("BGN", "NBRFI")
 SOURCE_TO_STUDENT_LABEL = {"None": "BGN", "NBRFI": "NBRFI"}
+# The full raw CSV encodes background as an empty field, while the curated core
+# metadata spells the same source class as "None".
+SOURCE_BACKGROUND_LABELS = frozenset({"", "None"})
 
 
 def sha256_file(path: str | Path, chunk_size: int = 1024 * 1024) -> str:
@@ -77,7 +80,7 @@ def select_challenge_segments(
         if segment in excluded:
             continue
         labels = set(frame["label"].astype(str))
-        if labels == {"None"}:
+        if labels and labels <= SOURCE_BACKGROUND_LABELS:
             rows.append({group_col: segment, "challenge_kind": "clean"})
         elif "NoneWNBRFI" in labels:
             rows.append({group_col: segment, "challenge_kind": "rfi_containing"})

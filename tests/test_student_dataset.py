@@ -44,7 +44,7 @@ class StudentDatasetTests(unittest.TestCase):
         full = pd.DataFrame(
             {
                 "segment_index": [1, 1, 2, 2, 3, 3, 4, 4],
-                "label": ["None", "None", "None", "NoneWNBRFI", "NoneWNBRFI", "NBRFI", "None", "None"],
+                "label": ["", "", "None", "NoneWNBRFI", "NoneWNBRFI", "NBRFI", "", ""],
             }
         )
 

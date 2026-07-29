@@ -1,0 +1,62 @@
+{
+  "experiment_id": "b0531_cnn_full_heldout_segments_v1",
+  "purpose": "Evaluate a frozen group-split CNN on every labelled row from its full held-out test segments.",
+  "status": "planned_after_cnn_baseline",
+  "code_revision": "record_at_execution",
+  "dataset": {
+    "dataset_id": "B0531+21_59000_48386_full_heldout_segments_v1",
+    "source_observation": "B0531+21_59000_48386.fil",
+    "full_metadata_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_channels_meta.csv",
+    "full_array_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_channels.npy",
+    "group_dataset_dir": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_group_split_v1",
+    "segment_length": 256,
+    "metadata_schema_version": "channel_metadata_group_split_v1"
+  },
+  "labels": {
+    "positive": "NBRFI",
+    "ordinary_negative": "None",
+    "hard_negative": "NoneWNBRFI",
+    "hard_negative_role": "included_in_full_heldout_test_only"
+  },
+  "split": {
+    "mode": "group_segment",
+    "group_column": "segment_index",
+    "indices_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_group_split_v1/group_split_indices.npz",
+    "test_source": "all_full_rows_with_group_in_corrected_test_split"
+  },
+  "preprocessing": {
+    "cleaning_variant": "none",
+    "cleaning_parameters": {},
+    "normalization_variant": "zscore_per_channel",
+    "normalization_parameters": {}
+  },
+  "representation": {
+    "kind": "raw_channel_series",
+    "feature_set": null
+  },
+  "model": {
+    "family": "cnn_1d",
+    "factory_name": "CNN1DRFI256Logits",
+    "parameters": {"dropout": 0.5},
+    "source_checkpoint": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_group_split_cnn_zscore_v1/checkpoint.pt",
+    "source_manifest": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_group_split_cnn_zscore_v1/run_manifest.json"
+  },
+  "selection": {
+    "threshold_source": "source_run_validation",
+    "threshold_rule": "reuse_frozen_best_f1_threshold",
+    "threshold_grid": "not_recomputed"
+  },
+  "evaluation": {
+    "universes": ["full_heldout_rows", "full_heldout_segments", "label_breakdown", "visual_review_queue"],
+    "primary_metric": "f1",
+    "review_segments_per_error_type": 6,
+    "inference_batch_size": 1024,
+    "device": "cpu"
+  },
+  "outputs": {
+    "run_directory": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_cnn_full_heldout_segments_v1",
+    "write_result_manifest": true,
+    "write_model_artifact": false,
+    "write_diagnostics": true
+  }
+}

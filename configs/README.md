@@ -5,13 +5,21 @@ declare a run; they never contain heavy data or generated diagnostics.
 
 `experiments/experiment_spec_template.json` defines the fields required for a
 comparable experiment. It is a template, not a runnable baseline configuration.
-The first executable group-split configuration will be added only after the
-corrected subset and its metadata contract exist.
+The first runnable group-split configurations point to the server-side
+corrected artifact directory created by `group_split_subset.ipynb`.
 
 Expected named configurations:
 
 - `legacy_row_split_v1.json` as a frozen historical declaration;
-- `b0531_group_split_baseline_v1.json` after corrected subset creation;
+- `b0531_group_split_cnn_zscore_v1.json` for the first corrected CNN run;
+- `b0531_group_split_statistical_both_v1.json` for the first corrected
+  engineered-feature baselines;
+- `b0531_cnn_full_heldout_segments_v1.json` for the complete-row evaluation
+  of segments held out by the corrected CNN group split; it reuses, rather
+  than reselects, the source run's validation threshold;
+- `b0531_statistical_full_heldout_segments_v1.json` for the analogous CPU
+  evaluation of every frozen statistical candidate on the same complete
+  held-out segments;
 - one configuration per normalization or cleaning variant;
 - separate full-file inference declarations.
 

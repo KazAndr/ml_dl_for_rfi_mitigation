@@ -43,14 +43,14 @@ not as an ordinary training negative.
 The current notebooks are exploratory and should not yet be treated as a fully
 reproducible pipeline.
 
-One important issue to fix before drawing final quantitative conclusions:
+The historical row-level split is retained only as a reproducibility control:
 
 - `notebooks/01_dataset_creation/subdataset_creation.ipynb` currently creates
   `split_indices.npz` with a stratified row-level split.
 - For channel-level data, channels from the same segment are correlated.
-- The next cleaned version should use a group split by `segment_index`, so that
-  all channels from one segment belong to only one of `train`, `validation`, or
-  `test`.
+- `notebooks/01_dataset_creation/group_split_subset.ipynb` is the corrected
+  path: it assigns each `segment_index` to only one of `train`, `validation`,
+  or `test` before the balanced subset is sampled.
 
 This is especially important for statistical features that use ratios between
 per-channel quantities and whole-segment quantities.
@@ -117,7 +117,7 @@ pip install -e .
   - Creates a smaller balanced subset for faster experiments.
   - Current baseline subset: `10000` `NBRFI` examples and `10000` `None`
     examples.
-  - Needs a group-split update before final metrics are trusted.
+  - Historical row-level control only; do not use it for corrected metrics.
 
 - `notebooks/01_dataset_creation/group_split_subset.ipynb`
   - New corrected path; leaves the historical subset untouched.
@@ -153,7 +153,39 @@ pip install -e .
   - Performs validation-threshold selection and feature-importance checks.
   - Saves selected top-k feature models.
 
+- `notebooks/03_model_training/cnn_experiment_runner.ipynb`
+  - Corrected 1D-CNN baseline on the group-split subset.
+  - Uses per-channel z-score normalization, validation-only checkpoint and
+    threshold selection, and a separate `NoneWNBRFI` stress test.
+
+- `notebooks/03_model_training/statistical_experiment_runner.ipynb`
+  - Corrected statistical baseline on the same group-split subset.
+  - Repeats the six legacy candidates with independent manifests: SGD logistic
+    regression, SGD linear SVM, polynomial logistic regression, RBF-approximate
+    logistic regression, histogram gradient boosting and the legacy-sized MLP.
+  - Linear-SVM decision scores are sigmoid-mapped for ranking and threshold
+    selection only; its log loss is not reported as probability calibration.
+
 ### Full-File / Real-Data Tests
+
+- `notebooks/04_full_file_tests/cnn_full_heldout_segment_evaluation.ipynb`
+  - Corrected replacement for the legacy ``unused''-segment review.
+  - Recovers held-out `segment_index` values from the group split, evaluates
+    every corresponding full-observation row, reuses the CNN run's frozen
+    validation threshold, and writes per-label, per-segment and visual-review
+    diagnostics.
+  - Defaults to CPU because the legacy benchmark found no GPU advantage at
+    one-segment batches; change the declared device only for a measured GPU
+    comparison.
+  - It is a same-observation held-out-segment test, not transfer to a new
+    observation.
+
+- `notebooks/04_full_file_tests/statistical_full_heldout_segment_evaluation.ipynb`
+  - Applies the same complete held-out segments to every frozen statistical
+    candidate using the 16 stored metadata features.
+  - Runs on CPU in batches and intentionally does not repeat feature
+    extraction, so it is an evaluation audit rather than a real-time runtime
+    measurement.
 
 - `notebooks/04_full_file_tests/1d_cnn_global_test_rfi_cleaning_real_test.ipynb`
   - Applies a trained 1D-CNN model to larger data products.
@@ -217,8 +249,8 @@ analysis easier to restart:
    legacy exploratory metrics.
 3. Replace the current row-level split with a segment-level group split.
 4. Re-run the baseline 1D-CNN and statistical models after the split fix.
-5. Add config files for dataset creation, baseline training, z-score tests, and
-   full-file inference.
+5. Execute the corrected CNN and statistical runners, then run the held-out
+   full-segment CNN review before comparing cleaning or normalization variants.
 6. Extract stable helper functions into `src/rfimt/`, while keeping notebooks
    as the main research interface.
 7. Only after the corrected baseline is reproducible, revisit z-score normalization and

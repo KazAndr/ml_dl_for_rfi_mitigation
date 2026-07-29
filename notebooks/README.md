@@ -51,7 +51,15 @@ with an explicit project-root helper.
 4. `04_full_file_tests/`
    - Apply trained models to larger files.
    - Compare masks and before/after behavior.
-   - This stage belongs after the baseline model contract is stable.
+   - `cnn_full_heldout_segment_evaluation.ipynb` is the first corrected
+     full-observation review: it evaluates every row from group-held-out test
+     segments with the baseline's frozen validation threshold.
+   - `statistical_full_heldout_segment_evaluation.ipynb` applies the same
+     segment universe to each frozen statistical baseline on CPU, using its
+     stored metadata features and candidate-specific validation threshold.
+   - This stage belongs after the baseline model contract is stable. A
+     held-out segment from this observation is not an independent-observation
+     transfer test.
 
 ## Notebook Policy
 

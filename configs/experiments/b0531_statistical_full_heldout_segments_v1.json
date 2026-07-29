@@ -1,0 +1,61 @@
+{
+  "experiment_id": "b0531_statistical_full_heldout_segments_v1",
+  "purpose": "Evaluate each frozen group-split statistical baseline on all labelled rows from its full held-out test segments.",
+  "status": "planned_after_statistical_baseline",
+  "code_revision": "record_at_execution",
+  "dataset": {
+    "dataset_id": "B0531+21_59000_48386_full_heldout_segments_v1",
+    "source_observation": "B0531+21_59000_48386.fil",
+    "full_metadata_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_channels_meta.csv",
+    "full_array_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_channels.npy",
+    "group_dataset_dir": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_group_split_v1",
+    "segment_length": 256,
+    "metadata_schema_version": "channel_metadata_group_split_v1"
+  },
+  "labels": {
+    "positive": "NBRFI",
+    "ordinary_negative": "None",
+    "hard_negative": "NoneWNBRFI",
+    "hard_negative_role": "included_in_full_heldout_test_only"
+  },
+  "split": {
+    "mode": "group_segment",
+    "group_column": "segment_index",
+    "indices_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_group_split_v1/group_split_indices.npz",
+    "test_source": "all_full_rows_with_group_in_corrected_test_split"
+  },
+  "preprocessing": {
+    "cleaning_variant": "none",
+    "cleaning_parameters": {},
+    "normalization_variant": "minmax_per_channel",
+    "normalization_parameters": {},
+    "imputation": "constant_zero_inside_frozen_model_pipeline"
+  },
+  "representation": {
+    "kind": "metadata_statistics",
+    "feature_set": "both",
+    "features": ["mean_o", "std_o", "skew_o", "kurt_o", "mean_n", "std_n", "skew_n", "kurt_n", "mean_o_ratio", "std_o_ratio", "skew_o_ratio", "kurt_o_ratio", "mean_n_ratio", "std_n_ratio", "skew_n_ratio", "kurt_n_ratio"]
+  },
+  "model": {
+    "family": "statistical",
+    "source_run_directory": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_group_split_statistical_both_v1",
+    "candidates": ["SGD_LogReg", "SGD_LinearSVM", "Poly2_LogReg", "RBFapprox_LogReg", "HistGB", "MLP"]
+  },
+  "selection": {
+    "threshold_source": "source_run_validation",
+    "threshold_rule": "reuse_frozen_best_f1_threshold",
+    "threshold_grid": "not_recomputed"
+  },
+  "evaluation": {
+    "universes": ["full_heldout_rows", "full_heldout_segments", "label_breakdown", "visual_review_queue"],
+    "primary_metric": "f1",
+    "review_segments_per_error_type": 6,
+    "device": "cpu"
+  },
+  "outputs": {
+    "run_directory": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_statistical_full_heldout_segments_v1",
+    "write_result_manifest": true,
+    "write_model_artifact": false,
+    "write_diagnostics": true
+  }
+}

@@ -115,13 +115,15 @@ if nn is not None:
             super().__init__()
             self.conv1 = nn.Conv1d(1, 64, kernel_size=7)
             self.conv2 = nn.Conv1d(64, 128, kernel_size=7)
-            self.conv3 = nn.Conv1d(128, 256, kernel_size=5)
+            self.conv3 = nn.Conv1d(128, 256, kernel_size=10)
             self.dropout = nn.Dropout(dropout)
-            self.fc1 = nn.Linear(256 * 57, 256)
+            self.fc1 = nn.Linear(256 * 25, 256)
             self.fc2 = nn.Linear(256, 1)
 
         def forward(self, x):
             x = F.max_pool1d(F.relu(self.conv1(x)), kernel_size=2)
+            # The legacy checkpoint architecture pads only this intermediate map.
+            x = F.pad(x, (0, 1))
             x = F.max_pool1d(F.relu(self.conv2(x)), kernel_size=2)
             x = F.max_pool1d(F.relu(self.conv3(x)), kernel_size=2)
             x = x.flatten(start_dim=1)

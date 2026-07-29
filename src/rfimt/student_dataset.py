@@ -10,7 +10,8 @@ import numpy as np
 import pandas as pd
 
 
-CORE_LABELS = ("None", "NBRFI")
+STUDENT_CORE_LABELS = ("BGN", "NBRFI")
+SOURCE_TO_STUDENT_LABEL = {"None": "BGN", "NBRFI": "NBRFI"}
 
 
 def sha256_file(path: str | Path, chunk_size: int = 1024 * 1024) -> str:
@@ -20,6 +21,14 @@ def sha256_file(path: str | Path, chunk_size: int = 1024 * 1024) -> str:
         while chunk := handle.read(chunk_size):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def map_source_labels_to_student(source_labels: pd.Series) -> pd.Series:
+    """Rename source annotations without changing the research data contract."""
+    unexpected = sorted(set(source_labels.astype(str)) - set(SOURCE_TO_STUDENT_LABEL))
+    if unexpected:
+        raise ValueError(f"Unexpected core source labels: {unexpected}")
+    return source_labels.astype(str).map(SOURCE_TO_STUDENT_LABEL)
 
 
 def assign_split_column(meta: pd.DataFrame, splits: Mapping[str, np.ndarray]) -> pd.DataFrame:
@@ -117,7 +126,7 @@ def student_readme() -> str:
 
 This package supports a first supervised machine-learning exercise on radio
 observation data. The task is to distinguish frequency channels marked as
-`NBRFI` from channels marked as `None`.
+`NBRFI` from channels marked as `BGN` (background noise).
 
 The goal is not to create a deployable RFI-cleaning system. It is to practice
 loading scientific arrays, inspecting data, defining a binary target, keeping
@@ -139,9 +148,12 @@ its mistakes.
 
 ## Labels
 
-- `None` means no selected narrow-band RFI was identified for the channel.
+- `BGN` means background noise: no selected narrow-band RFI was identified for
+  the channel.
 - `NBRFI` means the channel lies in a manually selected narrow-band RFI range.
 
+The original research annotation called the background class `None`. It is
+renamed to `BGN` here so that it cannot be confused with a missing value.
 These labels are practical annotations for this exercise, not a complete
 physical description of every signal in the observation.
 

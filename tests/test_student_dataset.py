@@ -10,6 +10,7 @@ import pandas as pd
 from rfimt.student_dataset import (
     assert_disjoint_split_groups,
     assign_split_column,
+    map_source_labels_to_student,
     select_challenge_segments,
     stack_complete_segments,
 )
@@ -51,6 +52,11 @@ class StudentDatasetTests(unittest.TestCase):
 
         self.assertNotIn(1, set(selected["segment_index"]))
         self.assertEqual(set(selected["challenge_kind"]), {"clean", "rfi_containing"})
+
+    def test_student_labels_rename_none_to_background_noise(self):
+        labels = map_source_labels_to_student(pd.Series(["None", "NBRFI"]))
+
+        self.assertEqual(labels.tolist(), ["BGN", "NBRFI"])
 
     def test_complete_segment_stack_keeps_channel_order(self):
         full = pd.DataFrame(

@@ -9,7 +9,8 @@
     "full_metadata_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_channels_meta.csv"
   },
   "core": {
-    "labels": ["None", "NBRFI"],
+    "source_labels": ["None", "NBRFI"],
+    "labels": ["BGN", "NBRFI"],
     "group_column": "segment_index",
     "channel_column": "channel_index",
     "segment_shape": [256, 256]

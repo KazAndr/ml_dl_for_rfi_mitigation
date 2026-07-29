@@ -102,6 +102,19 @@ to import `rfimt` without setting `PYTHONPATH` manually:
 pip install -e .
 ```
 
+## Testing
+
+`pytest` is the canonical test runner for this repository. Install development
+dependencies with `pip install -e '.[dev]'`, then run:
+
+```bash
+PYTHONPATH=src pytest
+```
+
+Existing `unittest` test classes remain supported and are discovered by pytest.
+New tests should use pytest style where it improves clarity; do not rewrite
+working tests merely for stylistic consistency.
+
 ## Notebook Map
 
 ### Dataset Creation

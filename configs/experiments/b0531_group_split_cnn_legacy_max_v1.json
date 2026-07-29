@@ -1,0 +1,26 @@
+{
+  "experiment_id": "b0531_group_split_cnn_legacy_max_v1",
+  "purpose": "Group-split 1D-CNN control that reproduces the legacy per-channel maximum scaling.",
+  "status": "planned_after_dataset_generation",
+  "code_revision": "record_at_execution",
+  "dataset": {
+    "dataset_id": "B0531+21_59000_48386_group_split_v1",
+    "source_observation": "B0531+21_59000_48386.fil",
+    "array_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_group_split_v1/subset_channels.npy",
+    "metadata_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_group_split_v1/subset_channels_meta.csv",
+    "split_indices_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_group_split_v1/group_split_indices.npz",
+    "hard_negative_metadata_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_group_split_v1/hard_negative_meta.csv",
+    "full_source_array_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_channels.npy",
+    "segment_length": 256,
+    "metadata_schema_version": "channel_metadata_group_split_v1"
+  },
+  "labels": {"positive": "NBRFI", "ordinary_negative": "None", "hard_negative": "NoneWNBRFI", "hard_negative_role": "evaluate_only"},
+  "split": {"mode": "group_segment", "group_column": "segment_index", "random_state": 42, "train_fraction": 0.8, "validation_fraction": 0.1, "test_fraction": 0.1},
+  "preprocessing": {"cleaning_variant": "none", "cleaning_parameters": {}, "normalization_variant": "legacy_max_per_channel", "normalization_parameters": {"scale": "row_maximum", "constant_row_fallback": 1.0}},
+  "representation": {"kind": "raw_channel_series", "feature_set": null},
+  "model": {"family": "cnn_1d", "factory_name": "CNN1DRFI256Logits", "parameters": {"dropout": 0.5}, "random_state": 42},
+  "training": {"epochs": 30, "batch_size": 256, "learning_rate": 0.001, "optimizer": "Adam", "loss": "BCEWithLogitsLoss", "checkpoint_selection": "minimum_validation_loss"},
+  "selection": {"threshold_source": "validation", "threshold_rule": "best_f1", "threshold_grid": "0.01_to_0.99_step_0.01"},
+  "evaluation": {"universes": ["row_test", "segment_test", "hard_negative"], "primary_metric": "f1"},
+  "outputs": {"run_directory": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_group_split_cnn_legacy_max_v1", "write_result_manifest": true, "write_model_artifact": true, "write_diagnostics": true}
+}

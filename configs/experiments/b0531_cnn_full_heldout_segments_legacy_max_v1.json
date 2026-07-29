@@ -1,6 +1,6 @@
 {
-  "experiment_id": "b0531_cnn_full_heldout_segments_v1",
-  "purpose": "Evaluate a frozen group-split CNN on every labelled row from its full held-out test segments.",
+  "experiment_id": "b0531_cnn_full_heldout_segments_legacy_max_v1",
+  "purpose": "Evaluate the frozen group-split CNN with legacy maximum scaling on every labelled row from its full held-out test segments.",
   "status": "planned_after_cnn_baseline",
   "code_revision": "record_at_execution",
   "dataset": {
@@ -27,7 +27,7 @@
   "preprocessing": {
     "cleaning_variant": "none",
     "cleaning_parameters": {},
-    "normalization_variant": "zscore_per_channel",
+    "normalization_variant": "legacy_max_per_channel",
     "normalization_parameters": {}
   },
   "representation": {
@@ -40,9 +40,9 @@
     "parameters": {
       "dropout": 0.5
     },
-    "source_checkpoint": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_group_split_cnn_zscore_v1/checkpoint.pt",
-    "source_manifest": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_group_split_cnn_zscore_v1/run_manifest.json",
-    "source_experiment_id": "b0531_group_split_cnn_zscore_v1"
+    "source_checkpoint": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_group_split_cnn_legacy_max_v1/checkpoint.pt",
+    "source_manifest": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_group_split_cnn_legacy_max_v1/run_manifest.json",
+    "source_experiment_id": "b0531_group_split_cnn_legacy_max_v1"
   },
   "selection": {
     "threshold_source": "source_run_validation",
@@ -70,7 +70,7 @@
     ]
   },
   "outputs": {
-    "run_directory": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_cnn_full_heldout_segments_v1",
+    "run_directory": "/hercules/results/akazantsev/rfim_dataset/runs/b0531_cnn_full_heldout_segments_legacy_max_v1",
     "write_result_manifest": true,
     "write_model_artifact": false,
     "write_diagnostics": true

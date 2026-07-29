@@ -171,6 +171,15 @@ rewrite working assertions merely for framework style.
   - Uses per-channel z-score normalization, validation-only checkpoint and
     threshold selection, and a separate `NoneWNBRFI` stress test.
 
+- `notebooks/03_model_training/cnn_experiment_runner_legacy_max.ipynb`
+  - Group-split control using the original per-channel division by row maximum.
+  - Isolates the effect of correcting the split from the effect of changing
+    normalization.
+
+- `notebooks/03_model_training/cnn_experiment_runner_zscore_segment.ipynb`
+  - Group-split test using one z-score normalization per complete 256-channel
+    spectrogram segment before sampled channel rows are selected.
+
 - `notebooks/03_model_training/statistical_experiment_runner.ipynb`
   - Corrected statistical baseline on the same group-split subset.
   - Repeats the six legacy candidates with independent manifests: SGD logistic
@@ -192,6 +201,16 @@ rewrite working assertions merely for framework style.
     comparison.
   - It is a same-observation held-out-segment test, not transfer to a new
     observation.
+  - Visual review saves paired grayscale images: the original spectrogram and
+    the same spectrogram overlaid with the predicted black channel mask.
+    The queue covers false positives, false negatives, mixed errors, positive
+    recovery, clean references and threshold-borderline cases.
+
+- `notebooks/04_full_file_tests/cnn_full_heldout_segment_evaluation_legacy_max.ipynb`
+  and `cnn_full_heldout_segment_evaluation_zscore_segment.ipynb`
+  - Equivalent full-held-out evaluations for the two additional normalization
+    experiments. Run each only after its matching training notebook has written
+    the checkpoint and manifest.
 
 - `notebooks/04_full_file_tests/statistical_full_heldout_segment_evaluation.ipynb`
   - Applies the same complete held-out segments to every frozen statistical

@@ -6,7 +6,7 @@ import unittest
 
 import numpy as np
 
-from rfimt.training import normalize_profile_rows
+from rfimt.training import normalize_profile_rows, normalize_profile_segments
 
 try:
     import torch
@@ -31,6 +31,22 @@ class ProfileNormalizationTests(unittest.TestCase):
         np.testing.assert_allclose(normalized[0].mean(), 0.0, atol=1e-6)
         np.testing.assert_allclose(normalized[0].std(), 1.0, atol=1e-6)
         np.testing.assert_array_equal(normalized[1], np.zeros(3, dtype=np.float32))
+
+    def test_legacy_max_matches_the_original_cnn_preprocessing(self):
+        profiles = np.array([[2.0, 4.0], [0.0, 0.0]])
+
+        normalized = normalize_profile_rows(profiles, "legacy_max_per_channel")
+
+        np.testing.assert_allclose(normalized, [[0.5, 1.0], [0.0, 0.0]])
+
+    def test_segment_zscore_uses_one_scale_for_each_complete_segment(self):
+        profiles = np.array([[1.0, 3.0], [5.0, 7.0], [10.0, 10.0], [12.0, 12.0]])
+
+        normalized = normalize_profile_segments(profiles, [1, 1, 2, 2])
+
+        for segment in (normalized[:2], normalized[2:]):
+            np.testing.assert_allclose(segment.mean(), 0.0, atol=1e-6)
+            np.testing.assert_allclose(segment.std(), 1.0, atol=1e-6)
 
     def test_normalization_rejects_non_row_array(self):
         with self.assertRaisesRegex(ValueError, "2D array"):

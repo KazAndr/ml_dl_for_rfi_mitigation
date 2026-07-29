@@ -12,18 +12,51 @@ def normalize_profile_rows(x, variant: str):
         raise ValueError("Profile rows must be a 2D array with shape (rows, time).")
     if variant == "none":
         return values.astype(np.float32, copy=False)
-    if variant != "zscore_per_channel":
+    values = values.astype(np.float32, copy=False)
+    if variant == "legacy_max_per_channel":
+        maximum = values.max(axis=1, keepdims=True)
+        maximum = np.where(maximum < 1e-8, 1.0, maximum)
+        return values / maximum
+    mean = values.mean(axis=1, keepdims=True)
+    if variant == "zscore_per_channel":
+        std = values.std(axis=1, keepdims=True)
+    else:
         raise ValueError(
-            "Unsupported normalization variant {!r}; expected 'zscore_per_channel' "
-            "or 'none'.".format(variant)
+            "Unsupported normalization variant {!r}; expected 'none', "
+            "'legacy_max_per_channel', or 'zscore_per_channel'. "
+            "Use normalize_profile_segments for zscore_per_segment.".format(variant)
         )
 
-    values = values.astype(np.float32, copy=False)
-    mean = values.mean(axis=1, keepdims=True)
-    std = values.std(axis=1, keepdims=True)
-    # Constant profiles have no scale; centering them preserves a finite baseline input.
+    # Constant inputs have no scale; preserve finite, centered input values.
     std = np.where(std == 0, 1.0, std)
     return (values - mean) / std
+
+
+def normalize_profile_segments(x, segment_ids):
+    """Z-score every complete spectrogram segment independently.
+
+    ``x`` must contain all channel rows for the requested segments. This is
+    intentionally separate from ``ProfileDataset``: a DataLoader batch is not
+    a physical observation segment and must never define this normalization.
+    """
+    values = np.asarray(x, dtype=np.float32)
+    groups = np.asarray(segment_ids)
+    if values.ndim != 2:
+        raise ValueError("Profile rows must be a 2D array with shape (rows, time).")
+    if len(values) != len(groups):
+        raise ValueError("Segment identifiers must align with profile rows.")
+
+    _, inverse, row_counts = np.unique(groups, return_inverse=True, return_counts=True)
+    n_values = row_counts * values.shape[1]
+    row_sums = values.sum(axis=1, dtype=np.float64)
+    row_square_sums = np.square(values, dtype=np.float64).sum(axis=1)
+    sums = np.bincount(inverse, weights=row_sums)
+    square_sums = np.bincount(inverse, weights=row_square_sums)
+    means = sums / n_values
+    variances = np.maximum(square_sums / n_values - np.square(means), 0.0)
+    stds = np.sqrt(variances)
+    stds = np.where(stds == 0, 1.0, stds)
+    return ((values - means[inverse, None]) / stds[inverse, None]).astype(np.float32)
 
 
 try:

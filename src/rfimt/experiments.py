@@ -20,6 +20,7 @@ EXPERIMENT_SPEC_VERSION = 1
 VALID_SPLIT_MODES = {"legacy_row", "group_segment"}
 VALID_NORMALIZATION_VARIANTS = {
     "none",
+    "legacy_max_per_channel",
     "minmax_per_channel",
     "zscore_per_channel",
     "zscore_per_segment",

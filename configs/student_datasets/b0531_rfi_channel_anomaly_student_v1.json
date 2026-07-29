@@ -1,0 +1,29 @@
+{
+  "dataset_id": "b0531_rfi_channel_anomaly_student_v1",
+  "purpose": "Student-safe binary RFI channel classification package with a separate unlabelled reality challenge.",
+  "source": {
+    "core_array_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_group_split_v1/subset_channels.npy",
+    "core_metadata_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_group_split_v1/subset_channels_meta.csv",
+    "core_split_indices_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_group_split_v1/group_split_indices.npz",
+    "full_array_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_channels.npy",
+    "full_metadata_path": "/hercules/results/akazantsev/rfim_dataset/B0531+21_59000_48386_channels_meta.csv"
+  },
+  "core": {
+    "labels": ["None", "NBRFI"],
+    "group_column": "segment_index",
+    "channel_column": "channel_index",
+    "segment_shape": [256, 256]
+  },
+  "challenge": {
+    "clean_segments": 12,
+    "rfi_containing_segments": 12,
+    "random_state": 20260729,
+    "exclude_core_segments": true,
+    "label_visibility": "supervisor_only"
+  },
+  "output": {
+    "root_directory": "/hercules/results/akazantsev/rfim_dataset/student_exports/b0531_rfi_channel_anomaly_student_v1",
+    "student_directory": "student_package",
+    "supervisor_directory": "supervisor_only"
+  }
+}

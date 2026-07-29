@@ -174,4 +174,8 @@ RFI structure, including channels marked `NoneWNBRFI` in the full research
 annotations. Do not use these spectra to tune the model. First make predictions
 and inspect the predicted channel masks; the supervisor will provide the
 corresponding reference labels for discussion afterwards.
+
+This challenge is a qualitative visual exercise, not an additional independent
+test split. Some complete spectrograms may contain channel time series already
+present in the core package, but their challenge labels remain hidden.
 """

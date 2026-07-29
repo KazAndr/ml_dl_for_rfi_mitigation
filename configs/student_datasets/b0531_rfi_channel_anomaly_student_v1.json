@@ -19,7 +19,7 @@
     "clean_segments": 12,
     "rfi_containing_segments": 12,
     "random_state": 20260729,
-    "exclude_core_segments": true,
+    "exclude_core_segments": false,
     "label_visibility": "supervisor_only"
   },
   "output": {
